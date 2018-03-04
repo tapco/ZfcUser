@@ -16,36 +16,37 @@ class AdapterChainServiceFactory implements FactoryInterface
     public function __invoke(ContainerInterface $serviceLocator, $requestedName, array $options = null)
     {
         $chain = new AdapterChain();
-
+        $chain->setEventManager($serviceLocator->get('EventManager'));
+        
         $options = $this->getOptions($serviceLocator);
-
+        
         //iterate and attach multiple adapters and events if offered
         foreach ($options->getAuthAdapters() as $priority => $adapterName) {
             $adapter = $serviceLocator->get($adapterName);
-
+            
             if (is_callable(array($adapter, 'authenticate'))) {
                 $chain->getEventManager()->attach('authenticate', array($adapter, 'authenticate'), $priority);
             }
-
+            
             if (is_callable(array($adapter, 'logout'))) {
                 $chain->getEventManager()->attach('logout', array($adapter, 'logout'), $priority);
             }
         }
-
+        
         return $chain;
     }
-
+    
     /**
      * @var ModuleOptions
      */
     protected $options;
-
+    
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->__invoke($serviceLocator, null);
     }
-
-
+    
+    
     /**
      * set options
      *
@@ -57,7 +58,7 @@ class AdapterChainServiceFactory implements FactoryInterface
         $this->options = $options;
         return $this;
     }
-
+    
     /**
      * get options
      *
@@ -72,12 +73,12 @@ class AdapterChainServiceFactory implements FactoryInterface
                 throw new OptionsNotFoundException(
                     'Options were tried to retrieve but not set ' .
                     'and no service locator was provided'
-                );
+                    );
             }
-
+            
             $this->setOptions($serviceLocator->get('zfcuser_module_options'));
         }
-
+        
         return $this->options;
     }
 }

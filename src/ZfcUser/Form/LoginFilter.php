@@ -14,15 +14,15 @@ class LoginFilter extends ProvidesEventsInputFilter
             'required'   => true,
             'validators' => array()
         );
-
+        
         $identityFields = $options->getAuthIdentityFields();
         if ($identityFields == array('email')) {
             $validators = array('name' => 'EmailAddress');
             array_push($identityParams['validators'], $validators);
         }
-
+        
         $this->add($identityParams);
-
+        
         $this->add(array(
             'name'       => 'credential',
             'required'   => true,
@@ -38,7 +38,5 @@ class LoginFilter extends ProvidesEventsInputFilter
                 array('name' => 'StringTrim'),
             ),
         ));
-
-        $this->getEventManager()->trigger('init', $this);
     }
 }

@@ -9,18 +9,18 @@ class RegisterFilter extends ProvidesEventsInputFilter
 {
     protected $emailValidator;
     protected $usernameValidator;
-
+    
     /**
      * @var RegistrationOptionsInterface
      */
     protected $options;
-
+    
     public function __construct($emailValidator, $usernameValidator, RegistrationOptionsInterface $options)
     {
         $this->setOptions($options);
         $this->emailValidator = $emailValidator;
         $this->usernameValidator = $usernameValidator;
-
+        
         if ($this->getOptions()->getEnableUsername()) {
             $this->add(array(
                 'name'       => 'username',
@@ -37,7 +37,7 @@ class RegisterFilter extends ProvidesEventsInputFilter
                 ),
             ));
         }
-
+        
         $this->add(array(
             'name'       => 'email',
             'required'   => true,
@@ -48,7 +48,7 @@ class RegisterFilter extends ProvidesEventsInputFilter
                 $this->emailValidator
             ),
         ));
-
+        
         if ($this->getOptions()->getEnableDisplayName()) {
             $this->add(array(
                 'name'       => 'display_name',
@@ -65,7 +65,7 @@ class RegisterFilter extends ProvidesEventsInputFilter
                 ),
             ));
         }
-
+        
         $this->add(array(
             'name'       => 'password',
             'required'   => true,
@@ -79,7 +79,7 @@ class RegisterFilter extends ProvidesEventsInputFilter
                 ),
             ),
         ));
-
+        
         $this->add(array(
             'name'       => 'passwordVerify',
             'required'   => true,
@@ -99,32 +99,30 @@ class RegisterFilter extends ProvidesEventsInputFilter
                 ),
             ),
         ));
-
-        $this->getEventManager()->trigger('init', $this);
     }
-
+    
     public function getEmailValidator()
     {
         return $this->emailValidator;
     }
-
+    
     public function setEmailValidator($emailValidator)
     {
         $this->emailValidator = $emailValidator;
         return $this;
     }
-
+    
     public function getUsernameValidator()
     {
         return $this->usernameValidator;
     }
-
+    
     public function setUsernameValidator($usernameValidator)
     {
         $this->usernameValidator = $usernameValidator;
         return $this;
     }
-
+    
     /**
      * set options
      *
@@ -135,7 +133,7 @@ class RegisterFilter extends ProvidesEventsInputFilter
         $this->options = $options;
         return $this;
     }
-
+    
     /**
      * get options
      *

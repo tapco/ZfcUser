@@ -10,13 +10,13 @@ class ChangeEmail extends ProvidesEventsForm
      * @var AuthenticationOptionsInterface
      */
     protected $authOptions;
-
+    
     public function __construct($name, AuthenticationOptionsInterface $options)
     {
         $this->setAuthenticationOptions($options);
-
+        
         parent::__construct($name);
-
+        
         $this->add(array(
             'name' => 'identity',
             'options' => array(
@@ -26,7 +26,7 @@ class ChangeEmail extends ProvidesEventsForm
                 'type' => 'hidden',
             ),
         ));
-
+        
         $this->add(array(
             'name' => 'newIdentity',
             'options' => array(
@@ -36,7 +36,7 @@ class ChangeEmail extends ProvidesEventsForm
                 'type' => 'text',
             ),
         ));
-
+        
         $this->add(array(
             'name' => 'newIdentityVerify',
             'options' => array(
@@ -46,7 +46,7 @@ class ChangeEmail extends ProvidesEventsForm
                 'type' => 'text',
             ),
         ));
-
+        
         $this->add(array(
             'name' => 'credential',
             'type' => 'password',
@@ -57,7 +57,7 @@ class ChangeEmail extends ProvidesEventsForm
                 'type' => 'password',
             ),
         ));
-
+        
         $this->add(array(
             'name' => 'submit',
             'attributes' => array(
@@ -65,10 +65,8 @@ class ChangeEmail extends ProvidesEventsForm
                 'type'  => 'submit'
             ),
         ));
-
-        $this->getEventManager()->trigger('init', $this);
     }
-
+    
     /**
      * Set Authentication-related Options
      *
@@ -78,10 +76,10 @@ class ChangeEmail extends ProvidesEventsForm
     public function setAuthenticationOptions(AuthenticationOptionsInterface $authOptions)
     {
         $this->authOptions = $authOptions;
-
+        
         return $this;
     }
-
+    
     /**
      * Get Authentication-related Options
      *

@@ -9,7 +9,7 @@ class Base extends ProvidesEventsForm
     public function __construct($name = null)
     {
         parent::__construct($name);
-
+        
         $this->add(array(
             'name' => 'username',
             'options' => array(
@@ -19,7 +19,7 @@ class Base extends ProvidesEventsForm
                 'type' => 'text'
             ),
         ));
-
+        
         $this->add(array(
             'name' => 'email',
             'options' => array(
@@ -29,7 +29,7 @@ class Base extends ProvidesEventsForm
                 'type' => 'text'
             ),
         ));
-
+        
         $this->add(array(
             'name' => 'display_name',
             'options' => array(
@@ -39,7 +39,7 @@ class Base extends ProvidesEventsForm
                 'type' => 'text'
             ),
         ));
-
+        
         $this->add(array(
             'name' => 'password',
             'type' => 'password',
@@ -50,7 +50,7 @@ class Base extends ProvidesEventsForm
                 'type' => 'password'
             ),
         ));
-
+        
         $this->add(array(
             'name' => 'passwordVerify',
             'type' => 'password',
@@ -61,18 +61,18 @@ class Base extends ProvidesEventsForm
                 'type' => 'password'
             ),
         ));
-
+        
         $submitElement = new Element\Button('submit');
         $submitElement
-            ->setLabel('Submit')
-            ->setAttributes(array(
-                'type'  => 'submit',
-            ));
-
+        ->setLabel('Submit')
+        ->setAttributes(array(
+            'type'  => 'submit',
+        ));
+        
         $this->add($submitElement, array(
             'priority' => -100,
         ));
-
+        
         $this->add(array(
             'name' => 'userId',
             'type' => 'Zend\Form\Element\Hidden',
@@ -80,15 +80,13 @@ class Base extends ProvidesEventsForm
                 'type' => 'hidden'
             ),
         ));
-
+        
         // @TODO: Fix this... getValidator() is a protected method.
         //$csrf = new Element\Csrf('csrf');
         //$csrf->getValidator()->setTimeout($this->getRegistrationOptions()->getUserFormTimeout());
         //$this->add($csrf);
-
-        $this->getEventManager()->trigger('init', $this);
     }
-
+    
     public function init()
     {
     }

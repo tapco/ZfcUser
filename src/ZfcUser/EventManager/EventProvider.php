@@ -26,12 +26,12 @@ abstract class EventProvider implements EventManagerAwareInterface
             if ((is_string($this->eventIdentifier))
                 || (is_array($this->eventIdentifier))
                 || ($this->eventIdentifier instanceof Traversable)
-            ) {
-                $identifiers = array_unique(array_merge($identifiers, (array) $this->eventIdentifier));
-            } elseif (is_object($this->eventIdentifier)) {
-                $identifiers[] = $this->eventIdentifier;
-            }
-            // silently ignore invalid eventIdentifier types
+                ) {
+                    $identifiers = array_unique(array_merge($identifiers, (array) $this->eventIdentifier));
+                } elseif (is_object($this->eventIdentifier)) {
+                    $identifiers[] = $this->eventIdentifier;
+                }
+                // silently ignore invalid eventIdentifier types
         }
         $events->setIdentifiers($identifiers);
         $this->events = $events;
@@ -47,7 +47,7 @@ abstract class EventProvider implements EventManagerAwareInterface
     public function getEventManager()
     {
         if (!$this->events instanceof EventManagerInterface) {
-            $this->setEventManager(new EventManager(new SharedEventManager()));
+            $this->setEventManager(new EventManager());
         }
         return $this->events;
     }

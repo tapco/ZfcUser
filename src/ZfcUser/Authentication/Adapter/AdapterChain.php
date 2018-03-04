@@ -5,6 +5,7 @@ namespace ZfcUser\Authentication\Adapter;
 use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\Result as AuthenticationResult;
 use Zend\EventManager\Event;
+use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerAwareTrait;
 use Zend\Stdlib\RequestInterface as Request;
 use Zend\Stdlib\ResponseInterface as Response;
@@ -13,12 +14,12 @@ use ZfcUser\Exception;
 class AdapterChain implements AdapterInterface
 {
     use EventManagerAwareTrait;
-
+    
     /**
      * @var AdapterChainEvent
      */
     protected $event;
-
+    
     /**
      * Returns the authentication result
      *
@@ -27,18 +28,18 @@ class AdapterChain implements AdapterInterface
     public function authenticate()
     {
         $e = $this->getEvent();
-
+        
         $result = new AuthenticationResult(
             $e->getCode(),
             $e->getIdentity(),
             $e->getMessages()
-        );
-
+            );
+        
         $this->resetAdapters();
-
+        
         return $result;
     }
-
+    
     /**
      * prepareForAuthentication
      *
@@ -50,36 +51,40 @@ class AdapterChain implements AdapterInterface
     {
         $e = $this->getEvent();
         $e->setRequest($request);
-
-        $this->getEventManager()->trigger('authenticate.pre', $e);
-
-        $result = $this->getEventManager()->trigger('authenticate', $e, function ($test) {
+        
+        $e->setName('authenticate.pre');
+        $this->getEventManager()->triggerEvent($e);
+        
+        $e->setName('authenticate');
+        $result = $this->getEventManager()->triggerEventUntil(function ($test) {
             return ($test instanceof Response);
-        });
-
-        if ($result->stopped()) {
-            if ($result->last() instanceof Response) {
-                return $result->last();
+        }, $e);
+            
+            if ($result->stopped()) {
+                if ($result->last() instanceof Response) {
+                    return $result->last();
+                }
+                
+                throw new Exception\AuthenticationEventException(
+                    sprintf(
+                        'Auth event was stopped without a response. Got "%s" instead',
+                        is_object($result->last()) ? get_class($result->last()) : gettype($result->last())
+                        )
+                    );
             }
-
-            throw new Exception\AuthenticationEventException(
-                sprintf(
-                    'Auth event was stopped without a response. Got "%s" instead',
-                    is_object($result->last()) ? get_class($result->last()) : gettype($result->last())
-                )
-            );
-        }
-
-        if ($e->getIdentity()) {
-            $this->getEventManager()->trigger('authenticate.success', $e);
-            return true;
-        }
-
-        $this->getEventManager()->trigger('authenticate.fail', $e);
-
-        return false;
+            
+            if ($e->getIdentity()) {
+                $e->setName('authenticate.success');
+                $this->getEventManager()->triggerEvent($e);
+                return true;
+            }
+            
+            $e->setName('authenticate.fail');
+            $this->getEventManager()->triggerEvent($e);
+            
+            return false;
     }
-
+    
     /**
      * resetAdapters
      *
@@ -88,7 +93,7 @@ class AdapterChain implements AdapterInterface
     public function resetAdapters()
     {
         $sharedManager = $this->getEventManager()->getSharedManager();
-
+        
         if ($sharedManager) {
             $listeners = $sharedManager->getListeners(['authenticate'], 'authenticate');
             foreach ($listeners as $listener) {
@@ -97,10 +102,10 @@ class AdapterChain implements AdapterInterface
                 }
             }
         }
-
+        
         return $this;
     }
-
+    
     /**
      * logoutAdapters
      *
@@ -109,9 +114,11 @@ class AdapterChain implements AdapterInterface
     public function logoutAdapters()
     {
         //Adapters might need to perform additional cleanup after logout
-        $this->getEventManager()->trigger('logout', $this->getEvent());
+        $e = $this->getEvent();
+        $e->setName('logout');
+        $this->getEventManager()->triggerEvent($e);
     }
-
+    
     /**
      * Get the auth event
      *
@@ -123,10 +130,10 @@ class AdapterChain implements AdapterInterface
             $this->setEvent(new AdapterChainEvent);
             $this->event->setTarget($this);
         }
-
+        
         return $this->event;
     }
-
+    
     /**
      * Set an event to use during dispatch
      *
@@ -142,9 +149,9 @@ class AdapterChain implements AdapterInterface
             $e = new AdapterChainEvent();
             $e->setParams($eventParams);
         }
-
+        
         $this->event = $e;
-
+        
         return $this;
     }
 }

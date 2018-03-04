@@ -8,11 +8,11 @@ use Zend\EventManager\EventInterface;
 interface ChainableAdapter
 {
     /**
-     * @param EventInterface $e
+     * @param AdapterChainEvent $e
      * @return bool
      */
-    public function authenticate(EventInterface $e);
-
+    public function authenticate(AdapterChainEvent $e);
+    
     /**
      * @return StorageInterface
      */

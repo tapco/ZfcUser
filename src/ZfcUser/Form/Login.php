@@ -11,13 +11,13 @@ class Login extends ProvidesEventsForm
      * @var AuthenticationOptionsInterface
      */
     protected $authOptions;
-
+    
     public function __construct($name, AuthenticationOptionsInterface $options)
     {
         $this->setAuthenticationOptions($options);
-
+        
         parent::__construct($name);
-
+        
         $this->add(array(
             'name' => 'identity',
             'options' => array(
@@ -27,7 +27,7 @@ class Login extends ProvidesEventsForm
                 'type' => 'text'
             ),
         ));
-
+        
         $emailElement = $this->get('identity');
         $label = $emailElement->getLabel('label');
         // @TODO: make translation-friendly
@@ -46,7 +46,7 @@ class Login extends ProvidesEventsForm
                 'type' => 'password',
             ),
         ));
-
+        
         // @todo: Fix this
         // 1) getValidator() is a protected method
         // 2) i don't believe the login form is actually being validated by the login action
@@ -55,21 +55,19 @@ class Login extends ProvidesEventsForm
         //$csrf = new Element\Csrf('csrf');
         //$csrf->getValidator()->setTimeout($options->getLoginFormTimeout());
         //$this->add($csrf);
-
+        
         $submitElement = new Element\Button('submit');
         $submitElement
-            ->setLabel('Sign In')
-            ->setAttributes(array(
-                'type'  => 'submit',
-            ));
-
+        ->setLabel('Sign In')
+        ->setAttributes(array(
+            'type'  => 'submit',
+        ));
+        
         $this->add($submitElement, array(
             'priority' => -100,
         ));
-
-        $this->getEventManager()->trigger('init', $this);
     }
-
+    
     /**
      * Set Authentication-related Options
      *
@@ -79,10 +77,10 @@ class Login extends ProvidesEventsForm
     public function setAuthenticationOptions(AuthenticationOptionsInterface $authOptions)
     {
         $this->authOptions = $authOptions;
-
+        
         return $this;
     }
-
+    
     /**
      * Get Authentication-related Options
      *

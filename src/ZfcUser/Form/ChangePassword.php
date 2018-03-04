@@ -10,13 +10,13 @@ class ChangePassword extends ProvidesEventsForm
      * @var AuthenticationOptionsInterface
      */
     protected $authOptions;
-
+    
     public function __construct($name, AuthenticationOptionsInterface $options)
     {
         $this->setAuthenticationOptions($options);
-
+        
         parent::__construct($name);
-
+        
         $this->add(array(
             'name' => 'identity',
             'options' => array(
@@ -26,7 +26,7 @@ class ChangePassword extends ProvidesEventsForm
                 'type' => 'hidden'
             ),
         ));
-
+        
         $this->add(array(
             'name' => 'credential',
             'type' => 'password',
@@ -37,7 +37,7 @@ class ChangePassword extends ProvidesEventsForm
                 'type' => 'password',
             ),
         ));
-
+        
         $this->add(array(
             'name' => 'newCredential',
             'options' => array(
@@ -47,7 +47,7 @@ class ChangePassword extends ProvidesEventsForm
                 'type' => 'password',
             ),
         ));
-
+        
         $this->add(array(
             'name' => 'newCredentialVerify',
             'type' => 'password',
@@ -58,7 +58,7 @@ class ChangePassword extends ProvidesEventsForm
                 'type' => 'password',
             ),
         ));
-
+        
         $this->add(array(
             'name' => 'submit',
             'attributes' => array(
@@ -66,10 +66,8 @@ class ChangePassword extends ProvidesEventsForm
                 'type'  => 'submit'
             ),
         ));
-
-        $this->getEventManager()->trigger('init', $this);
     }
-
+    
     /**
      * Set Authentication-related Options
      *
@@ -79,10 +77,10 @@ class ChangePassword extends ProvidesEventsForm
     public function setAuthenticationOptions(AuthenticationOptionsInterface $authOptions)
     {
         $this->authOptions = $authOptions;
-
+        
         return $this;
     }
-
+    
     /**
      * Get Authentication-related Options
      *
