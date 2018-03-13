@@ -1,2 +1,60 @@
-composer.lock
-vendor/*
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+*.mwb.bak
+*.mwb.beforefix
+
+# OS generated files #
+######################
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# Zend Studio files #
+######################
+.buildpath
+.project
+.settings
+.idea
+
+# local configs #
+######################
+local.php
+*.local.php
+
+# Vendor Libs #
+######################
+vendor
+
+# Test #
+######################
+phpmd.xml
+.php_cs.cache
+
+
+
