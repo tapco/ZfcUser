@@ -2,24 +2,21 @@
 namespace ZfcUser\Authentication\Adapter;
 
 use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcUser\Authentication\Adapter\AdapterChain;
 use ZfcUser\Options\ModuleOptions;
 use ZfcUser\Authentication\Adapter\Exception\OptionsNotFoundException;
-use Zend\EventManager\EventManager;
 
 class AdapterChainServiceFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $serviceLocator, $requestedName, array $options = null)
     {
         $chain = new AdapterChain();
-        
-        // get zend-mvc 'SharedEventManager'
-        $sharedEventManager = $serviceLocator->has('SharedEventManager') ? $serviceLocator->get('SharedEventManager') : null;
-        $eventManager =  new EventManager($sharedEventManager);
-        
-        $chain->setEventManager($eventManager);
+        $chain->setEventManager($serviceLocator->get('EventManager'));
         
         $options = $this->getOptions($serviceLocator);
         
